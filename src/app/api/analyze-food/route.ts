@@ -40,6 +40,11 @@ export async function POST(request: NextRequest) {
       console.error('Vision API error:', e);
     }
 
+    // Detect mime type from base64 string
+    const mimeType = imageBase64.startsWith('/') ? 'image/jpeg' : 
+                     imageBase64.startsWith('iVBO') ? 'image/png' : 
+                     imageBase64.startsWith('UklG') ? 'image/webp' : 'image/jpeg';
+
     // Step 2: Gemini 1.5 Pro - Nutritional Analysis (Multimodal)
     const geminiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${geminiKey}`,
@@ -49,7 +54,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           contents: [{
             parts: [
-              { inlineData: { mimeType: 'image/jpeg', data: imageBase64 } },
+              { inlineData: { mimeType, data: imageBase64 } },
               { text: `Analyze this food image. Vision API detected: ${visionLabels.join(', ')}.
 Return a JSON object with:
 {

@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const isDemo = !process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+  const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 
   useEffect(() => {
     if (isDemo) {
