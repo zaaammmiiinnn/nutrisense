@@ -60,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(profile);
     } catch (err) {
       console.error('Sign in failed:', err);
+      throw err;
     }
   };
 

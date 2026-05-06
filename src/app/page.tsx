@@ -25,8 +25,12 @@ export default function LandingPage() {
 
   const handleGetStarted = async () => {
     if (user) { router.push('/dashboard'); return; }
-    await signInWithGoogle();
-    router.push('/dashboard');
+    try {
+      await signInWithGoogle();
+      router.push('/dashboard');
+    } catch (e: any) {
+      alert(`Sign In Failed: ${e.message || "Please ensure this domain is added to Firebase Authorized Domains."}`);
+    }
   };
 
   return (
