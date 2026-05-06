@@ -34,8 +34,14 @@ export default function MealLogPage() {
         body: JSON.stringify({ imageBase64: base64 }),
       });
       const data = await res.json();
-      setResult(data.data);
-    } catch {
+      if (!data.success) {
+        alert(data.error);
+        setResult(DEMO_ANALYSIS_RESULT);
+      } else {
+        setResult(data.data);
+      }
+    } catch (e: any) {
+      alert(`Network Error: ${e.message}`);
       setResult(DEMO_ANALYSIS_RESULT);
     } finally {
       setAnalyzing(false);

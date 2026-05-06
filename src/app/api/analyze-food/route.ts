@@ -71,14 +71,27 @@ Only return valid JSON.` },
     );
 
     const geminiData = await geminiRes.json();
+    
+    // Debugging check: If Gemini returned an explicit error (like 403 API not enabled)
+    if (geminiData.error) {
+      console.error('Gemini API explicit error:', geminiData.error);
+      return NextResponse.json({ success: false, error: `Gemini API Error: ${geminiData.error.message}`, mode: 'error' });
+    }
+
     const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    const analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : DEMO_ANALYSIS_RESULT;
+    
+    if (!jsonMatch) {
+       console.error('Gemini returned unexpected format:', text);
+       return NextResponse.json({ success: false, error: `Gemini failed to parse JSON. Response: ${text.substring(0, 50)}...`, mode: 'error' });
+    }
+
+    const analysis = JSON.parse(jsonMatch[0]);
     analysis.visionLabels = visionLabels;
 
     return NextResponse.json({ success: true, data: analysis, mode: 'live' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Analysis error:', error);
-    return NextResponse.json({ success: true, data: DEMO_ANALYSIS_RESULT, mode: 'demo' });
+    return NextResponse.json({ success: false, error: `Server Error: ${error.message}`, mode: 'error' });
   }
 }
