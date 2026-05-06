@@ -8,9 +8,11 @@ export async function POST(request: NextRequest) {
     const geminiKey = process.env.GOOGLE_GEMINI_API_KEY;
 
     if (!geminiKey) {
-      // Demo mode
-      await new Promise(r => setTimeout(r, 1500));
-      return NextResponse.json({ success: true, data: DEMO_ANALYSIS_RESULT, mode: 'demo' });
+      return NextResponse.json({ 
+        success: false, 
+        error: "Missing GOOGLE_GEMINI_API_KEY. Please add your Gemini API key to your Cloud Run Environment Variables.", 
+        mode: 'error' 
+      });
     }
 
     // Step 1: Cloud Vision API - Label Detection
