@@ -19,15 +19,15 @@ Fitness: ${JSON.stringify(fitnessData || {})}.
 Return JSON: { "days": [{ "date": "YYYY-MM-DD", "dayName": string, "totalCalories": number, "totalProtein": number, "totalCarbs": number, "totalFat": number, "meals": [{ "mealType": "breakfast"|"lunch"|"dinner"|"snack", "name": string, "description": string, "calories": number, "protein": number, "carbs": number, "fat": number, "fiber": number, "ingredients": string[], "recipe": string, "prepTime": number, "cookTime": number }] }] }
 Only return valid JSON.`;
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${geminiKey}`,
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
       }
     );
-    const data = await res.json();
+    const data = await geminiRes.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     const plan = jsonMatch ? JSON.parse(jsonMatch[0]) : DEMO_MEAL_PLAN;

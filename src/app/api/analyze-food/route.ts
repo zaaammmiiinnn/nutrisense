@@ -47,9 +47,9 @@ export async function POST(request: NextRequest) {
                      imageBase64.startsWith('iVBO') ? 'image/png' : 
                      imageBase64.startsWith('UklG') ? 'image/webp' : 'image/jpeg';
 
-    // Step 2: Gemini 1.5 Pro - Nutritional Analysis (Multimodal)
+    // Step 2: Gemini 1.5 Flash - Nutritional Analysis (Multimodal)
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${geminiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

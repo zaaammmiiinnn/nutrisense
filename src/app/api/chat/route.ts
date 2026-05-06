@@ -33,15 +33,15 @@ export async function POST(request: NextRequest) {
       { role: 'user', parts: [{ text: message }] },
     ];
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${geminiKey}`,
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents }),
       }
     );
-    const data = await res.json();
+    const data = await geminiRes.json();
     const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here to help! Could you rephrase that?";
 
     return NextResponse.json({ success: true, message: reply, mode: 'live' });
